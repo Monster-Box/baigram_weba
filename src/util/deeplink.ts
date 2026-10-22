@@ -6,14 +6,15 @@ import type {
 import type { DeepLinkMethod } from './deepLinkParser';
 import { LeftColumnContent, SettingsScreens } from '../types';
 
-import { API_CHAT_TYPES, RE_TG_LINK, TON_CURRENCY_CODE } from '../config';
+import { API_CHAT_TYPES, DEEPLINK_SCHEME, RE_TG_LINK, TON_CURRENCY_CODE } from '../config';
 import { IS_BAD_URL_PARSER } from './browser/globalEnvironment';
 import { tryParseDeepLink } from './deepLinkParser';
 
 export const processDeepLink = (url: string, linkContext?: LinkContext): boolean => {
   const actions = getActions();
+  const normalizedUrl = normalizeDeepLinkScheme(url);
 
-  const parsedLink = tryParseDeepLink(url);
+  const parsedLink = tryParseDeepLink(normalizedUrl);
   if (parsedLink) {
     switch (parsedLink.type) {
       case 'privateMessageLink':
@@ -126,11 +127,11 @@ export const processDeepLink = (url: string, linkContext?: LinkContext): boolean
     }
   }
 
-  if (!url.match(RE_TG_LINK)) {
+  if (!normalizedUrl.match(RE_TG_LINK)) {
     return false;
   }
 
-  const urlToParse = IS_BAD_URL_PARSER ? url.replace(/^tg:\/\//, 'https://') : url;
+  const urlToParse = IS_BAD_URL_PARSER ? normalizedUrl.replace(/^tg:\/\//, 'https://') : normalizedUrl;
 
   const {
     protocol, searchParams, hostname,
@@ -279,6 +280,15 @@ export function formatShareText(url?: string, text?: string, title?: string): Ap
   return {
     text: [url, title, text].filter(Boolean).join('\n'),
   };
+}
+
+function normalizeDeepLinkScheme(url: string) {
+  const schemePrefix = `${DEEPLINK_SCHEME}:`;
+  if (DEEPLINK_SCHEME !== 'tg' && url.slice(0, schemePrefix.length).toLowerCase() === schemePrefix) {
+    return `tg:${url.slice(schemePrefix.length)}`;
+  }
+
+  return url;
 }
 
 function parseChooseParameter(choose?: string) {

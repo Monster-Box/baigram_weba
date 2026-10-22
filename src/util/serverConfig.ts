@@ -1,9 +1,12 @@
+import { configureServerLinks } from '../config';
 import { ACCOUNT_SLOT } from './multiaccount';
 
 export const SERVER_CONFIG_STORAGE_KEY = 'baigram_server_config';
 export const SERVER_LOOKUP_URL = 'https://server-worker.pages.dev/getserver';
 
 const REQUEST_TIMEOUT_MS = 10000;
+
+let serverIconRequest: Promise<ServerConfig | undefined> | undefined;
 
 export function getServerConfigStorageKey(slot = ACCOUNT_SLOT) {
   return slot && slot !== 1 ? `${SERVER_CONFIG_STORAGE_KEY}_${slot}` : SERVER_CONFIG_STORAGE_KEY;
@@ -17,6 +20,11 @@ export type ServerConfig = {
   wsPort?: number;
   name?: string;
   pubkey?: string;
+  dflink?: string;
+  deeplink?: string;
+  icon?: string;
+  iconLight?: string;
+  iconDark?: string;
 };
 
 type ServerLookupResponse = {
@@ -29,6 +37,12 @@ type ServerLookupResponse = {
   ws_port?: number;
   name?: string;
   pubkey?: string;
+  dflink?: string;
+  deeplink?: string;
+  systray_light?: string;
+  systray_dark?: string;
+  icon?: string;
+  icon_url?: string;
 };
 
 export function isValidServerConfig(config?: Partial<ServerConfig>): config is ServerConfig {
@@ -102,6 +116,11 @@ export async function requestServerConfig(input: string): Promise<ServerConfig> 
       wsPort: data.ws_port ? Number(data.ws_port) : undefined,
       name: data.name || undefined,
       pubkey: data.pubkey || undefined,
+      dflink: data.dflink || undefined,
+      deeplink: data.deeplink || undefined,
+      iconLight: data.systray_light || undefined,
+      iconDark: data.systray_dark || undefined,
+      icon: data.icon || data.icon_url || undefined,
     };
     if (!isValidServerConfig(config)) {
       throw new Error('Invalid server response');
@@ -116,4 +135,71 @@ export async function requestServerConfig(input: string): Promise<ServerConfig> 
   } finally {
     clearTimeout(timeout);
   }
+}
+
+export function resolveServerIconUrl(config: ServerConfig): string | undefined {
+  const icon = config.iconLight || config.iconDark || config.icon;
+  if (!icon) return undefined;
+
+  try {
+    const url = new URL(icon, globalThis.location.href);
+    if (url.protocol === 'http:' || url.protocol === 'https:') {
+      return url.toString();
+    }
+  } catch {
+    // data url fallback
+  }
+
+  return icon.startsWith('data:image/') ? icon : undefined;
+}
+
+export function applyServerFavicon(config = readServerConfig()) {
+  const iconUrl = config && resolveServerIconUrl(config);
+  if (!iconUrl) return;
+
+  document.querySelectorAll('link[rel~="icon"]').forEach((link) => {
+    link.remove();
+  });
+
+  const link = document.createElement('link');
+  link.rel = 'icon';
+  link.href = iconUrl;
+  document.head.appendChild(link);
+}
+
+export function applyServerLinks(config = readServerConfig()) {
+  configureServerLinks(config?.dflink, config?.deeplink);
+}
+
+export function ensureServerIcon(): Promise<ServerConfig | undefined> {
+  const storedConfig = readServerConfig();
+  if (!storedConfig || (storedConfig.iconLight && storedConfig.dflink && storedConfig.deeplink)) {
+    return Promise.resolve(storedConfig);
+  }
+
+  serverIconRequest ??= requestServerConfig(storedConfig.id)
+    .then((freshConfig) => {
+      if (!freshConfig.iconLight && !freshConfig.iconDark && !freshConfig.dflink && !freshConfig.deeplink) {
+        return storedConfig;
+      }
+
+      const updatedConfig: ServerConfig = {
+        ...storedConfig,
+        dflink: freshConfig.dflink || storedConfig.dflink,
+        deeplink: freshConfig.deeplink || storedConfig.deeplink,
+        icon: undefined,
+        iconLight: freshConfig.iconLight,
+        iconDark: freshConfig.iconDark,
+      };
+      saveServerConfig(updatedConfig);
+      applyServerLinks(updatedConfig);
+      applyServerFavicon(updatedConfig);
+      return updatedConfig;
+    })
+    .catch(() => storedConfig)
+    .finally(() => {
+      serverIconRequest = undefined;
+    });
+
+  return serverIconRequest;
 }

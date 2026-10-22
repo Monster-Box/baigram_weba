@@ -36,6 +36,11 @@
   #logo {
     background: url("../../assets/telegram-logo.svg") center no-repeat;
     background-size: 100%;
+
+    &.is-custom {
+      object-fit: contain;
+      background: none;
+    }
   }
 
   h1 {

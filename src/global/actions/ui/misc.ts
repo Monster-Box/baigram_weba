@@ -16,6 +16,7 @@ import { shouldShowErrorDialog } from '../../../util/getReadableErrorText';
 import { compact, unique } from '../../../util/iteratees';
 import { refreshFromCache } from '../../../util/localization';
 import * as langProvider from '../../../util/oldLangProvider';
+import { readServerConfig } from '../../../util/serverConfig';
 import updateIcon from '../../../util/updateIcon';
 import { setPageTitle, setPageTitleInstant } from '../../../util/updatePageTitle';
 import {
@@ -809,7 +810,7 @@ addActionHandler('updatePageTitle', (global, actions, payload): ActionReturnType
   const isTestServer = global.config?.isTestServer;
   const prefix = isTestServer ? '[T] ' : '';
 
-  const defaultTitle = IS_TAURI ? PAGE_TITLE_TAURI : PAGE_TITLE;
+  const defaultTitle = readServerConfig()?.name || (IS_TAURI ? PAGE_TITLE_TAURI : PAGE_TITLE);
 
   if (document.title.includes(INACTIVE_MARKER)) {
     updateIcon(false);

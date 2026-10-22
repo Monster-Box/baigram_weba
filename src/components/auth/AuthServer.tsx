@@ -84,7 +84,7 @@ const AuthServer = () => {
       )}
       <div className="auth-form">
         <div id="logo" />
-        <h1>BaiGram</h1>
+        <h1>{existingConfig?.name || 'Baigram'}</h1>
         <p className="note">
           {existingConfig?.name ? `Currently connected to ${existingConfig.name}.` : ''}
           {' '}

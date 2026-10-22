@@ -67,8 +67,7 @@ enum AppScreens {
 }
 
 const TRANSITION_RENDER_COUNT = Object.keys(AppScreens).length / 2;
-const ACTIVE_PAGE_TITLE = IS_TAURI ? PAGE_TITLE_TAURI : PAGE_TITLE;
-const INACTIVE_PAGE_TITLE = `${ACTIVE_PAGE_TITLE} ${INACTIVE_MARKER}`;
+const DEFAULT_PAGE_TITLE = IS_TAURI ? PAGE_TITLE_TAURI : PAGE_TITLE;
 
 const App = ({
   authState,
@@ -84,7 +83,10 @@ const App = ({
 }: StateProps) => {
   const { isMobile } = useAppLayout();
   const isMobileOs = PLATFORM_ENV === 'iOS' || PLATFORM_ENV === 'Android';
-  const hasServerConfig = Boolean(readServerConfig());
+  const serverConfig = readServerConfig();
+  const hasServerConfig = Boolean(serverConfig);
+  const activePageTitle = serverConfig?.name || DEFAULT_PAGE_TITLE;
+  const inactivePageTitle = `${activePageTitle} ${INACTIVE_MARKER}`;
 
   useEffect(() => {
     if (IS_INSTALL_PROMPT_SUPPORTED) {
@@ -206,11 +208,11 @@ const App = ({
 
   useEffect(() => {
     if (inactiveReason) {
-      document.title = INACTIVE_PAGE_TITLE;
+      document.title = inactivePageTitle;
     } else {
-      document.title = ACTIVE_PAGE_TITLE;
+      document.title = activePageTitle;
     }
-  }, [inactiveReason]);
+  }, [inactiveReason, activePageTitle, inactivePageTitle]);
 
   const prevActiveKey = usePrevious(activeKey);
 

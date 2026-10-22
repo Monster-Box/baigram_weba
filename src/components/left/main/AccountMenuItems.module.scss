@@ -1,0 +1,12 @@
+.serverName {
+  overflow: hidden;
+
+  padding: 0.5rem 1rem 0.25rem;
+
+  font-size: 0.75rem;
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.25;
+  color: var(--color-primary);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

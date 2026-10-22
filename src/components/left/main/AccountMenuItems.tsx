@@ -1,4 +1,6 @@
-import { memo, useMemo } from '../../../lib/teact/teact';
+import {
+  Fragment, memo, useMemo,
+} from '../../../lib/teact/teact';
 import { getActions } from '../../../global';
 
 import type { ApiUser } from '../../../api/types';
@@ -8,6 +10,7 @@ import { temporarilySuspendCacheUpdate } from '../../../global/cache';
 import { getCurrentMaxAccountCount, getCurrentProdAccountCount } from '../../../global/helpers';
 import { IS_SAFARI } from '../../../util/browser/windowEnvironment';
 import { getAccountSlotUrl } from '../../../util/multiaccount';
+import { readServerConfig } from '../../../util/serverConfig';
 import { REM } from '../../common/helpers/mediaDimensions';
 
 import useLang from '../../../hooks/useLang';
@@ -17,12 +20,21 @@ import useMultiaccountInfo from '../../../hooks/useMultiaccountInfo';
 import Avatar from '../../common/Avatar';
 import FullNameTitle from '../../common/FullNameTitle';
 import MenuItem from '../../ui/MenuItem';
-import MenuSeparator from '../../ui/MenuSeparator';
+
+import styles from './AccountMenuItems.module.scss';
 
 type OwnProps = {
   currentUser: ApiUser;
   totalLimit: number;
   onSelectCurrent?: VoidFunction;
+};
+
+type AccountEntry = [string, AccountInfo];
+
+type AccountGroup = {
+  key: string;
+  name?: string;
+  accounts: AccountEntry[];
 };
 
 const NOTIFICATION_DURATION = 7000;
@@ -41,6 +53,28 @@ const AccountMenuItems = ({
 
   const currentAccountInfo = useMemo(() => {
     return Object.values(accounts).find((account) => account.userId === currentUser.id);
+  }, [accounts, currentUser.id]);
+
+  const accountGroups = useMemo(() => {
+    const groups = new Map<string, AccountGroup>();
+    const sortedAccounts = Object.entries(accounts || {}).sort(([, first], [, second]) => {
+      if (first.userId === currentUser.id) return -1;
+      if (second.userId === currentUser.id) return 1;
+      return 0;
+    });
+
+    for (const entry of sortedAccounts) {
+      const config = readServerConfig(Number(entry[0]));
+      const key = config?.id || '';
+      let group = groups.get(key);
+      if (!group) {
+        group = { key, name: config?.name || config?.id, accounts: [] };
+        groups.set(key, group);
+      }
+      group.accounts.push(entry);
+    }
+
+    return [...groups.values()];
   }, [accounts, currentUser.id]);
 
   const shouldShowLimit = currentCount >= maxCount;
@@ -87,23 +121,24 @@ const AccountMenuItems = ({
 
   return (
     <>
-      {Object.entries(accounts || {})
-        .sort(([, account]) => (account.userId === currentUser.id ? -1 : 1))
-        .map(([slot, account], index, arr) => {
-          const isSameServer = account.isTest === currentAccountInfo?.isTest;
-          const mockUser: CustomPeer = {
-            title: [account.firstName, account.lastName].filter(Boolean).join(' '),
-            isCustomPeer: true,
-            peerColorId: account.color,
-            emojiStatusId: isSameServer ? account.emojiStatusId : undefined,
-            isPremium: account.isPremium,
-          };
+      {accountGroups.map((group) => (
+        <Fragment key={group.key || 'unknown'}>
+          {group.name && (
+            <div className={styles.serverName} title={group.name}>{group.name}</div>
+          )}
+          {group.accounts.map(([slot, account]) => {
+            const isSameServer = account.isTest === currentAccountInfo?.isTest;
+            const mockUser: CustomPeer = {
+              title: [account.firstName, account.lastName].filter(Boolean).join(' '),
+              isCustomPeer: true,
+              peerColorId: account.color,
+              emojiStatusId: isSameServer ? account.emojiStatusId : undefined,
+              isPremium: account.isPremium,
+            };
 
-          const hasSeparator = account.userId === currentUser.id && (newAccountUrl || arr.length > 1);
-
-          return (
-            <>
+            return (
               <MenuItem
+                key={slot}
                 className="account-menu-item"
                 customIcon={(
                   <Avatar
@@ -119,10 +154,10 @@ const AccountMenuItems = ({
                 {account.isTest && <span className="account-menu-item-test">T</span>}
                 <FullNameTitle peer={mockUser} withEmojiStatus emojiStatusSize={REM} />
               </MenuItem>
-              {hasSeparator && <MenuSeparator />}
-            </>
-          );
-        })}
+            );
+          })}
+        </Fragment>
+      ))}
       {newAccountUrl && (
         <MenuItem
           icon="add"

@@ -340,7 +340,10 @@ export const RE_MENTION_TEMPLATE = '(@[\\w\\d_-]+)';
 export const RE_TG_LINK = /^tg:(\/\/)?/i;
 export const RE_TME_LINK = /^(https?:\/\/)?(?:([-a-zA-Z0-9@:%_+~#=]{1,32}\.)?t\.me|telegram\.(?:me|dog))(?=[:/?#]|$)/i;
 export const RE_TELEGRAM_LINK = /^(https?:\/\/)?telegram\.org\//i;
-export const TME_LINK_PREFIX = 'https://t.me/';
+const DEFAULT_DEEPLINK_SCHEME = 'tg';
+const DEFAULT_TME_LINK_PREFIX = 'https://t.me/';
+export let DEEPLINK_SCHEME = DEFAULT_DEEPLINK_SCHEME;
+export let TME_LINK_PREFIX = DEFAULT_TME_LINK_PREFIX;
 export const BOT_FATHER_USERNAME = 'botfather';
 export const USERNAME_PURCHASE_ERROR = 'USERNAME_PURCHASE_AVAILABLE';
 export const MESSAGE_ID_REQUIRED_ERROR = 'MESSAGE_ID_REQUIRED';
@@ -351,6 +354,44 @@ export const TME_WEB_DOMAINS = new Set([
 ]);
 export const WEB_APP_PLATFORM = 'weba';
 export const LANG_PACK = 'weba';
+
+let deepLinkSchemePattern = RE_TG_LINK;
+
+export function configureServerLinks(dflink?: string, deeplink?: string) {
+  const linkUrl = parseDflinkUrl(dflink);
+  TME_LINK_PREFIX = linkUrl ? linkUrl.toString() : DEFAULT_TME_LINK_PREFIX;
+  DEEPLINK_SCHEME = deeplink && /^[a-z][a-z\d+.-]*$/i.test(deeplink) ? deeplink.toLowerCase() : DEFAULT_DEEPLINK_SCHEME;
+  deepLinkSchemePattern = DEEPLINK_SCHEME === DEFAULT_DEEPLINK_SCHEME
+    ? RE_TG_LINK
+    : new RegExp(`^(?:tg|${DEEPLINK_SCHEME}):(\\/\\/)?`, 'i');
+
+  if (linkUrl) {
+    TME_WEB_DOMAINS.add(linkUrl.hostname.toLowerCase());
+  }
+}
+
+export function isDeepLinkSchemeUrl(url: string) {
+  return deepLinkSchemePattern.test(url);
+}
+
+function parseDflinkUrl(dflink?: string) {
+  if (!dflink) return undefined;
+
+  const value = dflink.trim();
+  try {
+    const url = new URL(/^https?:\/\//i.test(value) ? value : `https://${value}`);
+    if (url.protocol !== 'http:' && url.protocol !== 'https:') return undefined;
+
+    if (!url.pathname.endsWith('/')) {
+      url.pathname += '/';
+    }
+    url.search = '';
+    url.hash = '';
+    return url;
+  } catch {
+    return undefined;
+  }
+}
 
 export const NSFW_RESTRICTION_REASON = 'sensitive';
 

@@ -28,6 +28,7 @@ import { subscribeToPasscodeChannel } from './util/passcode/channel';
 import { initPasscodeNavigation } from './util/passcode/navigation';
 import { checkAndAssignPermanentWebVersion } from './util/permanentWebVersion';
 import { onBeforeUnload } from './util/schedulers';
+import { applyServerFavicon, applyServerLinks, ensureServerIcon } from './util/serverConfig';
 import initTauriApi from './util/tauri/initTauriApi';
 import setupTauriListeners from './util/tauri/setupTauriListeners';
 import updateWebmanifest from './util/updateWebmanifest';
@@ -82,6 +83,9 @@ async function init() {
   const global = getGlobal();
 
   initLocalization(selectSharedSettings(global).language, true);
+  applyServerLinks();
+  applyServerFavicon();
+  void ensureServerIcon();
 
   subscribeToMasterChange((isMasterTab) => {
     getActions()

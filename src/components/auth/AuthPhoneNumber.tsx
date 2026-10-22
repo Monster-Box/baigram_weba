@@ -13,6 +13,7 @@ import preloadFonts from '../../util/fonts';
 import { getAccountSlotUrl } from '../../util/multiaccount';
 import { oldSetLanguage } from '../../util/oldLangProvider';
 import { formatPhoneNumber, getCountryCodeByIso, getCountryFromPhoneNumber } from '../../util/phoneNumber';
+import { ensureServerIcon, readServerConfig, resolveServerIconUrl } from '../../util/serverConfig';
 import { navigateBack } from './helpers/backNavigation';
 import { getSuggestedLanguage } from './helpers/getSuggestedLanguage';
 
@@ -86,6 +87,27 @@ const AuthPhoneNumber = ({
 
   const accountsInfo = useMultiaccountInfo();
   const hasActiveAccount = Object.values(accountsInfo).length > 0;
+  const serverName = useMemo(() => readServerConfig()?.name, []);
+  const [serverIconUrl, setServerIconUrl] = useState(() => {
+    const config = readServerConfig();
+    return config ? resolveServerIconUrl(config) : undefined;
+  });
+
+  useEffect(() => {
+    if (serverIconUrl) return undefined;
+
+    let isCancelled = false;
+    void ensureServerIcon().then((config) => {
+      const iconUrl = config && resolveServerIconUrl(config);
+      if (iconUrl && !isCancelled) {
+        setServerIconUrl(iconUrl);
+      }
+    });
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [serverIconUrl]);
   const phoneNumberSlots = useMemo(() => (
     Object.entries(accountsInfo)
       .filter(([, info]) => info.isTest === isTestServer)
@@ -258,8 +280,12 @@ const AuthPhoneNumber = ({
         />
       )}
       <div className="auth-form">
-        <div id="logo" />
-        <h1>{lang('AuthTitle')}</h1>
+        {serverIconUrl ? (
+          <img id="logo" className="is-custom" src={serverIconUrl} alt="" draggable={false} />
+        ) : (
+          <div id="logo" />
+        )}
+        <h1>{serverName || lang('AuthTitle')}</h1>
         <p className="note">{lang('StartText')}</p>
         <form className="form" action="" onSubmit={handleSubmit}>
           <CountryCodeInput

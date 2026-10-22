@@ -1,6 +1,8 @@
 import type { ThreadId } from '../types';
 
-import { RE_TG_LINK, RE_TME_LINK } from '../config';
+import {
+  DEEPLINK_SCHEME, isDeepLinkSchemeUrl, RE_TME_LINK, TME_WEB_DOMAINS,
+} from '../config';
 import { IS_BAD_URL_PARSER } from './browser/globalEnvironment';
 import { ensureProtocol } from './browser/url';
 import { parseTimestampDuration } from './dates/timestamp';
@@ -169,11 +171,15 @@ type OAuthLinkBuilderParams = Omit<BuilderParams<OAuthLink>, 'url'> & {
   url: string;
 };
 
-const ELIGIBLE_HOSTNAMES = new Set(['t.me', 'telegram.me', 'telegram.dog']);
 const MAX_BOT_START_PARAMETER_LENGTH = 64;
 
 export function isDeepLink(link: string): boolean {
-  return Boolean(link.match(RE_TME_LINK) || link.match(RE_TG_LINK));
+  return Boolean(link.match(RE_TME_LINK) || isDeepLinkSchemeUrl(link) || isTmeHostedLink(link));
+}
+
+function isTmeHostedLink(link: string) {
+  const hostMatch = link.match(/^(?:https?:\/\/)?([^/?#:]+)/i);
+  return Boolean(hostMatch && TME_WEB_DOMAINS.has(hostMatch[1].toLowerCase()));
 }
 
 export function tryParseDeepLink(link: string): DeepLink | undefined {
@@ -196,6 +202,13 @@ export function getUsernameFromDeepLink(url: string) {
 }
 
 function parseDeepLink(url: string) {
+  const trimmedUrl = url.trim();
+  const schemePrefix = `${DEEPLINK_SCHEME}:`;
+  if (DEEPLINK_SCHEME !== 'tg' && trimmedUrl.toLowerCase().startsWith(schemePrefix)) {
+    const path = trimmedUrl.slice(schemePrefix.length).replace(/^\/+/, '');
+    return parseTgLink(new URL(`https://${path}`));
+  }
+
   const correctUrl = ensureProtocol(url);
   if (!correctUrl) {
     return undefined;
@@ -306,7 +319,7 @@ function parseTgLink(url: URL) {
 }
 
 function parseHttpLink(url: URL) {
-  if (!ELIGIBLE_HOSTNAMES.has(url.hostname)) {
+  if (!TME_WEB_DOMAINS.has(url.hostname)) {
     return undefined;
   }
   const queryParams = getQueryParams(url);

@@ -5,7 +5,7 @@ import { getActions, withGlobal } from '../../global';
 
 import type { GlobalState } from '../../global/types';
 
-import { STRICTERDOM_ENABLED } from '../../config';
+import { DEEPLINK_SCHEME, STRICTERDOM_ENABLED } from '../../config';
 import { disableStrict, enableStrict } from '../../lib/fasterdom/stricterdom';
 import { selectSharedSettings } from '../../global/selectors/sharedState';
 import buildClassName from '../../util/buildClassName';
@@ -33,7 +33,6 @@ type StateProps = {
   language?: string;
 };
 
-const DATA_PREFIX = 'tg://login?token=';
 const QR_SIZE = 280;
 const QR_PLANE_SIZE = 54;
 const QR_IMAGE_SIZE_RATIO = 0.4;
@@ -84,7 +83,7 @@ const AuthCode = ({
     }
 
     const container = qrCodeRef.current!;
-    const data = `${DATA_PREFIX}${authQrCode.token}`;
+    const data = `${DEEPLINK_SCHEME}://login?token=${authQrCode.token}`;
 
     if (STRICTERDOM_ENABLED) {
       disableStrict();
