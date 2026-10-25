@@ -1,9 +1,8 @@
 {
-    "name": "Telegram Web",
-    "short_name": "Telegram Web",
-    "description": "Telegram is a cloud-based mobile and desktop messaging app with a focus on security and speed.",
+    "name": "Baigram Web",
+    "short_name": "Baigram",
+    "description": "A fast, secure, cloud-based messaging app.",
     "start_url": "./",
-    "gcm_sender_id": "122867383838",
     "icons": [
         {
             "src": "icon-square-192x192.png",
@@ -21,11 +20,6 @@
             "type": "image/png"
         }
     ],
-    "screenshots" : [{
-      "src": "screenshot.jpg",
-      "sizes": "1280x802",
-      "type": "image/jpeg"
-    }],
     "share_target": {
       "action": "./share/",
       "method": "POST",

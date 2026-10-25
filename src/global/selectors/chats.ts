@@ -59,10 +59,6 @@ export function selectIsChatWithBot<T extends GlobalState>(global: T, chatId: st
   return user && isUserBot(user);
 }
 
-export function selectSupportChat<T extends GlobalState>(global: T) {
-  return Object.values(global.chats.byId).find(({ isSupport }: ApiChat) => isSupport);
-}
-
 export function selectChatOnlineCount<T extends GlobalState>(global: T, chat: ApiChat) {
   const fullInfo = selectChatFullInfo(global, chat.id);
   if (isUserId(chat.id) || isChatChannel(chat) || !fullInfo) {

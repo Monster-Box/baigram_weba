@@ -1,6 +1,6 @@
-# Telegram Web A
+# Baigram Web A
 
-This project won the first prize 🥇 at [Telegram Lightweight Client Contest](https://contest.com/javascript-web-3) and now is an official Telegram client available to anyone at [web.telegram.org/a](https://web.telegram.org/a).
+This project write by Telegram.
 
 According to the original contest rules, it has nearly zero dependencies and is fully based on its own [Teact](https://github.com/Ajaxy/teact) framework (which re-implements React paradigm). It also uses a custom version of [GramJS](https://github.com/gram-js/gramjs) as an MTProto implementation.
 
@@ -16,7 +16,6 @@ mv .env.example .env
 npm i
 ```
 
-Obtain API ID and API hash on [my.telegram.org](https://my.telegram.org) and populate the `.env` file.
 
 ## Dev mode
 
@@ -55,4 +54,4 @@ await invoke(new GramJs.help.GetAppConfig())
 * fastblur
 
 ## Bug reports and Suggestions
-If you find an issue with this app, let Telegram know using the [Suggestions Platform](https://bugs.telegram.org/c/4002).
+If you find an issue with this app, send issus to Monster-Box/baigram_weba.

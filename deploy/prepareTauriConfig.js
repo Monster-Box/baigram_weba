@@ -8,7 +8,7 @@ export default function prepareTauriConfig() {
     bundle: {
       windows: {},
     },
-    identifier: 'org.telegram.TelegramAir',
+    identifier: 'space.arona.baigram',
   };
 
   if (process.env.WITH_UPDATER === 'true') {

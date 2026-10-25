@@ -22,11 +22,11 @@ import useShowTransitionDeprecated from '../../hooks/useShowTransitionDeprecated
 import appStyles from '../App.module.scss';
 import styles from './UiLoader.module.scss';
 
+import appLogoPath from '../../assets/app-logo.svg';
 import starIconPath from '../../assets/icons/star/star.webp';
 import lockPreviewPath from '../../assets/lock.png';
 import monkeyPath from '../../assets/monkey.svg';
 import spoilerMaskPath from '../../assets/spoilers/mask.svg';
-import telegramLogoPath from '../../assets/telegram-logo.svg';
 
 export type UiLoaderPage =
   'main'
@@ -97,14 +97,14 @@ const preloadTasks = {
   ]),
   authPhoneNumber: () => Promise.all([
     preloadFonts(),
-    preloadImage(telegramLogoPath),
+    preloadImage(appLogoPath),
   ]),
   authCode: () => preloadImage(monkeyPath),
   authPassword: () => preloadImage(monkeyPath),
   authQrCode: preloadFonts,
   authServer: () => Promise.all([
     preloadFonts(),
-    preloadImage(telegramLogoPath),
+    preloadImage(appLogoPath),
   ]),
   lock: () => Promise.all([
     preloadFonts(),

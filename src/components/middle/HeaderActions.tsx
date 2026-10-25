@@ -7,7 +7,6 @@ import type { IAnchorPosition, MessageListType, ThreadId, TranslationTone } from
 import { MAIN_THREAD_ID } from '../../api/types';
 import { ManagementScreens } from '../../types';
 
-import { COCOON_EMOJI_ID } from '../../config';
 import { requestMeasure, requestNextMutation } from '../../lib/fasterdom/fasterdom';
 import {
   getHasAdminRight,
@@ -41,11 +40,9 @@ import useLang from '../../hooks/useLang';
 import useLastCallback from '../../hooks/useLastCallback';
 import useOldLang from '../../hooks/useOldLang';
 
-import CustomEmoji from '../common/CustomEmoji';
 import Icon from '../common/icons/Icon';
 import Button from '../ui/Button';
 import DropdownMenu from '../ui/DropdownMenu';
-import Link from '../ui/Link';
 import MenuItem from '../ui/MenuItem';
 import MenuSeparator from '../ui/MenuSeparator';
 import NestedMenuItem from '../ui/NestedMenuItem';
@@ -133,7 +130,6 @@ const HeaderActions = ({
     setSettingOption,
     setViewForumAsMessages,
     openFrozenAccountModal,
-    openCocoonModal,
   } = getActions();
   const menuButtonRef = useRef<HTMLButtonElement>();
   const oldLang = useOldLang();
@@ -243,10 +239,6 @@ const HeaderActions = ({
     openChatLanguageModal({ chatId });
   });
 
-  const handleCocoonClick = useLastCallback(() => {
-    openCocoonModal();
-  });
-
   const handleDoNotTranslate = useLastCallback(() => {
     if (!detectedChatLanguage) return;
 
@@ -331,22 +323,6 @@ const HeaderActions = ({
           {detectedChatLanguage
             && <MenuItem icon="hand-stop" onClick={handleDoNotTranslate}>{doNotTranslateText}</MenuItem>}
           <MenuItem icon="close-circle" onClick={handleHide}>{oldLang('Hide')}</MenuItem>
-          <MenuSeparator />
-          <MenuItem withWrap onClick={handleCocoonClick}>
-            {lang('TranslateMenuCocoon', {
-              link: (
-                <Link isPrimary onClick={(e) => e.preventDefault()}>
-                  {lang('TranslateMenuCocoonLinkText')}
-                </Link>
-              ),
-            }, {
-              withNodes: true,
-              withMarkdown: true,
-              specialReplacement: {
-                '🥚': <CustomEmoji documentId={COCOON_EMOJI_ID} />,
-              },
-            })}
-          </MenuItem>
         </DropdownMenu>
       )}
       {!isMobile && (

@@ -1175,7 +1175,6 @@ export interface LangPair {
   'ConversationViewBot': undefined;
   'ConversationViewPost': undefined;
   'ConversationViewChannel': undefined;
-  'Telegram': undefined;
   'ChatListFilterAddToFolder': undefined;
   'ChatListUnpinFromTop': undefined;
   'ChatListPinToTop': undefined;
@@ -2273,23 +2272,10 @@ export interface LangPair {
   'EnterPassword': undefined;
   'EnterPasswordDescription': undefined;
   'Transfer': undefined;
-  'TranslateMenuCocoonLinkText': undefined;
   'TranslationTone': undefined;
   'TranslationToneNeutral': undefined;
   'TranslationToneFormal': undefined;
   'TranslationToneCasual': undefined;
-  'CocoonTitle': undefined;
-  'CocoonDescription': undefined;
-  'CocoonFeature1Title': undefined;
-  'CocoonFeature1Username': undefined;
-  'CocoonFeature1UsernameLink': undefined;
-  'CocoonFeature2Title': undefined;
-  'CocoonFeature2Text': undefined;
-  'CocoonFeature3Title': undefined;
-  'CocoonFeature3LinkText': undefined;
-  'CocoonFeature3Link': undefined;
-  'CocoonFooterLinkText': undefined;
-  'CocoonFooterLink': undefined;
   'ChatListAuctionWinning': undefined;
   'ChatListAuctionOutbid': undefined;
   'ChatListAuctionView': undefined;
@@ -4068,18 +4054,6 @@ export interface LangPairWithVariables<V = LangVariable> {
   };
   'LeaveGroupJoinedDate': {
     'date': V;
-  };
-  'TranslateMenuCocoon': {
-    'link': V;
-  };
-  'CocoonFeature1Text': {
-    'username': V;
-  };
-  'CocoonFeature3Text': {
-    'link': V;
-  };
-  'CocoonFooterText': {
-    'link': V;
   };
   'ChatListAuctionMixed': {
     'winCount': V;

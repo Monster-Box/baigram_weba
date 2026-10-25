@@ -67,7 +67,7 @@ pub static LAST_URL: LazyLock<std::sync::Mutex<String>> =
 
 pub const DEFAULT_WINDOW_TITLE: &str = match std::option_env!("APP_TITLE") {
   Some(title) => title,
-  None => "Telegram Air",
+  None => "Baigram Air",
 };
 
 pub const BASE_URL: &str = match std::option_env!("BASE_URL") {

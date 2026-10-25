@@ -1,10 +1,10 @@
  [package]
-name = "telegram_air"
+name = "baigram_air"
 version = "2.11.5"
-description = "Telegram Air"
+description = "Baigram Air"
 authors = ["Alexander Zinchuk"]
 license = "GPLv3"
-repository = "https://github.com/Ajaxy/telegram-tt"
+repository = "https://github.com/Monster-Box/baigram_weba"
 edition = "2024"
 rust-version = "1.97"
 

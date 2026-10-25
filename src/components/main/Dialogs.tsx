@@ -11,6 +11,7 @@ import type {
 } from '../../api/types';
 import type { MessageList } from '../../types';
 
+import { APP_BRAND } from '../../config';
 import { selectCurrentMessageList, selectTabState } from '../../global/selectors';
 import getReadableErrorText from '../../util/getReadableErrorText';
 import { renderTextWithEntities } from '../common/helpers/renderTextWithEntities';
@@ -87,7 +88,7 @@ const Dialogs = ({ dialogs, currentMessageList }: StateProps) => {
     );
   };
 
-  const renderTextDialog = (renderedText: TeactNode, title = 'Telegram') => {
+  const renderTextDialog = (renderedText: TeactNode, title = APP_BRAND) => {
     return (
       <Modal
         isOpen={isModalOpen}
@@ -150,7 +151,7 @@ function getErrorHeader(error: ApiDialogError) {
   }
 
   if (!error.hasErrorKey) {
-    return 'Telegram';
+    return APP_BRAND;
   }
 
   return 'Something went wrong';

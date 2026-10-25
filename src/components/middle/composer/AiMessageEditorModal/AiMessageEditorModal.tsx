@@ -91,7 +91,6 @@ const AiMessageEditorModal = ({
     applyAiMessageEditorResult,
     sendAiMessageEditorResult,
     composeWithAiMessageEditor,
-    openCocoonModal,
   } = getActions();
 
   const lang = useLang();
@@ -179,10 +178,6 @@ const AiMessageEditorModal = ({
 
   const handleApply = useLastCallback(() => {
     applyAiMessageEditorResult();
-  });
-
-  const handleOpenCocoonModal = useLastCallback(() => {
-    openCocoonModal();
   });
 
   const handleSendAction = useLastCallback((
@@ -273,17 +268,6 @@ const AiMessageEditorModal = ({
       headerClassName="modal-header-condensed-wide"
       dialogClassName={styles.modalDialog}
       contentClassName={styles.modalContent}
-      headerRightToolBar={(
-        <Button
-          className={styles.helpButton}
-          round
-          size="tiny"
-          color="translucent"
-          iconName="help"
-          ariaLabel={lang('ButtonHelp')}
-          onClick={handleOpenCocoonModal}
-        />
-      )}
       isSlim
     >
       <TabList

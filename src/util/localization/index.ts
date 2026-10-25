@@ -26,6 +26,7 @@ import {
 import { DEBUG, FORCE_FALLBACK_LANG, LANG_PACK } from '../../config';
 import { callApi } from '../../api/gramjs';
 import renderText, { type TextFilter } from '../../components/common/helpers/renderText';
+import brandify from '../brand';
 import { IS_INTL_LIST_FORMAT_SUPPORTED } from '../browser/globalEnvironment';
 import { MAIN_IDB_STORE } from '../browser/idb';
 import { getBasicListFormat } from '../browser/intlListFormat';
@@ -384,7 +385,7 @@ function getString(langKey: LangKey, count: number) {
     ? (langPackStringValue[pluralSuffix] || langPackStringValue.other)
     : langPackStringValue;
 
-  return string;
+  return brandify(string);
 }
 
 function processTranslation(

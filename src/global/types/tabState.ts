@@ -1113,8 +1113,6 @@ export type TabState = {
   insertingPeerIdMention?: string;
   shouldSaveAttachmentsCompression?: boolean;
 
-  isCocoonModalOpen?: boolean;
-
   rankModal?: {
     chatId: string;
     userId: string;

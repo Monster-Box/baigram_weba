@@ -3,6 +3,7 @@ import { memo, useCallback, useRef } from '../../lib/teact/teact';
 
 import type { TextPart } from '../../types';
 
+import { APP_BRAND } from '../../config';
 import buildClassName from '../../util/buildClassName';
 
 import useKeyboardListNavigation from '../../hooks/useKeyboardListNavigation';
@@ -61,7 +62,7 @@ const ConfirmDialog: FC<OwnProps> = ({
   return (
     <Modal
       className={buildClassName('confirm', className)}
-      title={(title || (!noDefaultTitle ? lang('Telegram') : undefined))}
+      title={(title || (!noDefaultTitle ? APP_BRAND : undefined))}
       header={header}
       isOpen={isOpen}
       onClose={onClose}

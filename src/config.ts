@@ -8,10 +8,10 @@ import type {
 
 export const APP_CODE_NAME = 'A';
 export const APP_ENV = import.meta.env.TG_APP_ENV;
-export const APP_NAME = import.meta.env.TG_APP_NAME || `Telegram Web ${APP_CODE_NAME}`;
+export const APP_BRAND = import.meta.env.TG_APP_BRAND || 'Baigram';
+export const APP_NAME = import.meta.env.TG_APP_NAME || `${APP_BRAND} Web ${APP_CODE_NAME}`;
 
 export const PRODUCTION_HOSTNAME = 'web.telegram.org';
-export const PRODUCTION_URL = 'https://web.telegram.org/a';
 export const WEB_VERSION_BASE = 'https://web.telegram.org/'; // Used to redirect to other versions
 export const BASE_URL = import.meta.env.TG_PUBLIC_URL;
 export const ACCOUNT_QUERY = 'account';
@@ -36,7 +36,7 @@ export const DEBUG_ALERT_MSG = 'Shoot!\nSomething went wrong, please see the err
 export const DEBUG_GRAMJS = false;
 
 export const PAGE_TITLE = import.meta.env.TG_APP_TITLE;
-export const PAGE_TITLE_TAURI = 'Telegram Air';
+export const PAGE_TITLE_TAURI = `${APP_BRAND} Air`;
 export const INACTIVE_MARKER = '[Inactive]';
 export const TELEGRAM_API_ID = Number(import.meta.env.TG_TELEGRAM_API_ID);
 export const TELEGRAM_API_HASH = import.meta.env.TG_TELEGRAM_API_HASH;
@@ -340,7 +340,8 @@ export const RE_MENTION_TEMPLATE = '(@[\\w\\d_-]+)';
 export const RE_TG_LINK = /^tg:(\/\/)?/i;
 export const RE_TME_LINK = /^(https?:\/\/)?(?:([-a-zA-Z0-9@:%_+~#=]{1,32}\.)?t\.me|telegram\.(?:me|dog))(?=[:/?#]|$)/i;
 export const RE_TELEGRAM_LINK = /^(https?:\/\/)?telegram\.org\//i;
-const DEFAULT_DEEPLINK_SCHEME = 'tg';
+// must match the scheme registered in tauri.conf.json / Info.plist
+const DEFAULT_DEEPLINK_SCHEME = 'baigram';
 const DEFAULT_TME_LINK_PREFIX = 'https://t.me/';
 export let DEEPLINK_SCHEME = DEFAULT_DEEPLINK_SCHEME;
 export let TME_LINK_PREFIX = DEFAULT_TME_LINK_PREFIX;
@@ -411,7 +412,6 @@ export const REPLIES_USER_ID = '1271266957'; // TODO For Test connection ID must
 export const VERIFICATION_CODES_USER_ID = '489000';
 export const ANONYMOUS_USER_ID = '2666000';
 export const RESTRICTED_EMOJI_SET_ID = '7173162320003080';
-export const COCOON_EMOJI_ID = '5197252827247841976';
 export const LOCAL_MESSAGES_LIMIT = 1e6; // 1M
 export const CHANNEL_ID_BASE = 10n ** 12n;
 export const DEFAULT_GIF_SEARCH_BOT_USERNAME = 'gif';
@@ -424,9 +424,7 @@ export const MAX_MEDIA_FILES_FOR_ALBUM = 10;
 export const MAX_ACTIVE_PINNED_CHATS = 5;
 export const SCHEDULED_WHEN_ONLINE = 0x7FFFFFFE;
 export const LANG_PACKS = ['android', 'ios', 'tdesktop', 'macos'] as const;
-export const FEEDBACK_URL = 'https://bugs.telegram.org/?tag_ids=41&sort=time';
-export const FAQ_URL = 'https://telegram.org/faq';
-export const PRIVACY_URL = 'https://telegram.org/privacy';
+export const FEEDBACK_URL = 'https://github.com/Monster-Box/baigram_weba/issues';
 export const MINI_APP_TOS_URL = 'https://telegram.org/tos/mini-apps';
 export const GENERAL_TOPIC_ID = 1;
 export const FRESH_AUTH_PERIOD = 86400; // 1 day

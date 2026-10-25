@@ -130,7 +130,6 @@ import {
   selectPeerFullInfo,
   selectSimilarChannelIds,
   selectStickerSet,
-  selectSupportChat,
   selectTabState,
   selectTopic,
   selectTopics,
@@ -528,22 +527,6 @@ addActionHandler('openLinkedChat', async (global, actions, payload): Promise<voi
 
   if (chatFullInfo?.fullInfo?.linkedChatId) {
     actions.openChat({ id: chatFullInfo.fullInfo.linkedChatId, tabId });
-  }
-});
-
-addActionHandler('openSupportChat', async (global, actions, payload): Promise<void> => {
-  const { tabId = getCurrentTabId() } = payload || {};
-  const chat = selectSupportChat(global);
-  if (chat) {
-    actions.openChat({ id: chat.id, shouldReplaceHistory: true, tabId });
-    return;
-  }
-
-  actions.openChat({ id: TMP_CHAT_ID, shouldReplaceHistory: true, tabId });
-
-  const result = await callApi('fetchChat', { type: 'support' });
-  if (result) {
-    actions.openChat({ id: result.chatId, shouldReplaceHistory: true, tabId });
   }
 });
 

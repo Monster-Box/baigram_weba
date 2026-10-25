@@ -23,7 +23,6 @@ import BoostModal from './boost/BoostModal.async';
 import BrowserModal from './browser/BrowserModal.async';
 import ChatInviteModal from './chatInvite/ChatInviteModal.async';
 import ChatlistModal from './chatlist/ChatlistModal.async';
-import CocoonModal from './cocoon/CocoonModal.async';
 import CollectibleInfoModal from './collectible/CollectibleInfoModal.async';
 import DeleteAccountModal from './deleteAccount/DeleteAccountModal.async';
 import DeleteMemberModal from './deleteMember/DeleteMemberModal.async';
@@ -163,7 +162,6 @@ type ModalKey = keyof Pick<TabState,
   'leaveGroupModal' |
   'isTwoFaCheckModalOpen' |
   'isQuickChatPickerOpen' |
-  'isCocoonModalOpen' |
   'editRankModal' |
   'rankModal' |
   'aiTonePreviewModal' |
@@ -304,7 +302,6 @@ const LEGACY_MODALS: LegacyModalRegistry = {
   leaveGroupModal: LeaveGroupModal,
   isTwoFaCheckModalOpen: TwoFaCheckModal,
   isQuickChatPickerOpen: QuickChatPickerModal,
-  isCocoonModalOpen: CocoonModal,
   editRankModal: EditRankModal,
   rankModal: RankModal,
   aiTonePreviewModal: AiTonePreviewModal,

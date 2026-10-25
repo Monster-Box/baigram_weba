@@ -4,7 +4,7 @@ import { getActions, withGlobal } from '../../../global';
 import type { ApiStarsAmount, ApiTonAmount } from '../../../api/types';
 import { SettingsScreens } from '../../../types';
 
-import { FAQ_URL, PRIVACY_URL, TON_CURRENCY_CODE } from '../../../config';
+import { TON_CURRENCY_CODE } from '../../../config';
 import { formatStarsAmount } from '../../../global/helpers/payments';
 import {
   selectIsGiveawayGiftsPurchaseAvailable,
@@ -14,15 +14,12 @@ import buildClassName from '../../../util/buildClassName';
 import { convertCurrencyFromBaseUnit } from '../../../util/formatCurrency';
 import { formatStarsAsIcon, formatTonAsIcon } from '../../../util/localization/format';
 
-import useFlag from '../../../hooks/useFlag';
 import useHistoryBack from '../../../hooks/useHistoryBack';
 import useLang from '../../../hooks/useLang';
-import useLastCallback from '../../../hooks/useLastCallback';
 
 import ChatExtra from '../../common/profile/ChatExtra';
 import ProfileInfo from '../../common/profile/ProfileInfo';
 import Island from '../../gili/layout/Island';
-import ConfirmDialog from '../../ui/ConfirmDialog';
 import ListItem from '../../ui/ListItem';
 
 import styles from './SettingsMain.module.scss';
@@ -54,14 +51,10 @@ const SettingsMain = ({
   const {
     loadMoreProfilePhotos,
     openPremiumModal,
-    openSupportChat,
-    openUrl,
     openGiftRecipientPicker,
     openStarsBalanceModal,
     openSettingsScreen,
   } = getActions();
-
-  const [isSupportDialogOpen, openSupportDialog, closeSupportDialog] = useFlag(false);
 
   const lang = useLang();
 
@@ -74,11 +67,6 @@ const SettingsMain = ({
   useHistoryBack({
     isActive,
     onBack: onReset,
-  });
-
-  const handleOpenSupport = useLastCallback(() => {
-    openSupportChat();
-    closeSupportDialog();
   });
 
   return (
@@ -275,42 +263,7 @@ const SettingsMain = ({
             </ListItem>
           )}
         </Island>
-
-        <Island>
-          <ListItem
-            icon="support-filled"
-            iconBg="red"
-            narrow
-            onClick={openSupportDialog}
-          >
-            {lang('AskAQuestion')}
-          </ListItem>
-          <ListItem
-            icon="help-filled"
-            iconBg="blue"
-            narrow
-            onClick={() => openUrl({ url: FAQ_URL })}
-          >
-            {lang('MenuTelegramFaq')}
-          </ListItem>
-          <ListItem
-            icon="privacy-policy-filled"
-            iconBg="green"
-            narrow
-            onClick={() => openUrl({ url: PRIVACY_URL })}
-          >
-            {lang('MenuPrivacyPolicy')}
-          </ListItem>
-        </Island>
       </div>
-      <ConfirmDialog
-        isOpen={isSupportDialogOpen}
-        confirmLabel={lang('OK')}
-        title={lang('AskAQuestion')}
-        textParts={lang('MenuAskText', undefined, { withNodes: true, renderTextFilters: ['br'] })}
-        confirmHandler={handleOpenSupport}
-        onClose={closeSupportDialog}
-      />
     </div>
   );
 };

@@ -8,6 +8,7 @@ import {
 } from '../config';
 import { selectSharedSettings } from '../global/selectors/sharedState';
 import { callApi } from '../api/gramjs';
+import brandify from './brand';
 import * as cacheApi from './cacheApi';
 import { createCallbackManager } from './callbacks';
 import { loadAndChangeLanguage } from './localization';
@@ -257,11 +258,11 @@ function processTranslation(
 
   if (value !== undefined) {
     const formattedValue = format === 'i' ? formatInteger(value) : value;
-    const result = processTemplate(template, formattedValue);
+    const result = processTemplate(brandify(template), formattedValue);
     const cacheValue = Array.isArray(value) ? JSON.stringify(value) : value;
     cache.set(`${key}_${cacheValue}_${format}${pluralValue ? `_${pluralValue}` : ''}`, result);
     return result;
   }
 
-  return template;
+  return brandify(template);
 }

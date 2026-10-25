@@ -1,6 +1,6 @@
 {
   "identifier": "default",
-  "description": "Permissions available to Telegram app content",
+  "description": "Permissions available to Baigram app content",
   "local": true,
   "webviews": ["*"],
   "permissions": [

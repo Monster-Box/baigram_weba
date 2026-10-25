@@ -15,10 +15,8 @@ import SwayingStar from './SwayingStar.tsx';
 
 import styles from './ParticlesHeader.module.scss';
 
-import Cocoon from '../../../assets/cocoon.webp';
-
 interface OwnProps {
-  model: 'swaying-star' | 'speeding-diamond' | 'ai-egg' | 'sticker';
+  model: 'swaying-star' | 'speeding-diamond' | 'sticker';
   sticker?: ApiSticker;
   color: 'purple' | 'gold' | 'blue';
   title: TeactNode;
@@ -70,16 +68,6 @@ function ParticlesHeader({
           className={modelClassName}
           color={color as 'purple' | 'gold'}
           centerShift={PARTICLE_PARAMS.centerShift}
-          onMouseMove={handleMouseMove}
-        />
-      ) : model === 'ai-egg' ? (
-        <img
-          src={Cocoon}
-          alt=""
-          role="presentation"
-          aria-hidden="true"
-          className={buildClassName(styles.cocoon, modelClassName)}
-          draggable={false}
           onMouseMove={handleMouseMove}
         />
       ) : model === 'speeding-diamond' ? (

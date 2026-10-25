@@ -469,7 +469,6 @@ export interface ActionPayloads {
   toggleDialogFilterTags: {
     isEnabled: boolean;
   };
-  openSupportChat: WithTabId | undefined;
   openChatByPhoneNumber: {
     phoneNumber: string;
     startAttach?: string | boolean;
@@ -3385,9 +3384,6 @@ export interface ActionPayloads {
     chatId: string;
     messageId: number;
   };
-
-  openCocoonModal: WithTabId | undefined;
-  closeCocoonModal: WithTabId | undefined;
 
   requestMessageMediaEditor: {
     chatId: string;

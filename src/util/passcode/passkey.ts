@@ -1,3 +1,4 @@
+import { APP_NAME } from '../../config';
 import { signalUnknownPasskey } from '../browser/passkeys';
 import { bufferToBase64Url } from '../encoding/base64';
 import { getTranslationFn } from '../localization';
@@ -5,7 +6,7 @@ import { getTranslationFn } from '../localization';
 const PRF_SALT_LENGTH = 32;
 const CHALLENGE_LENGTH = 32;
 const HKDF_INFO = 'tt-passcode-unlock';
-const RP_NAME = 'Telegram Web';
+const RP_NAME = APP_NAME;
 
 let conditionalRequestAbortController: AbortController | undefined;
 

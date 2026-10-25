@@ -12,7 +12,6 @@ import buildGitInfoPlugin from './plugins/gitInfo.ts';
 import packageJson from './package.json' with { type: 'json' };
 
 const DIR_NAME = dirname(fileURLToPath(import.meta.url));
-const PRODUCTION_URL = 'https://web.telegram.org/a';
 
 const { version: APP_VERSION } = packageJson;
 const BUNDLE_STATS_OUT_DIR = 'bundle-stats';
@@ -78,8 +77,9 @@ export default defineConfig(({ mode }): UserConfig => {
   } = env;
   const appEnv = env.APP_ENV || (mode === 'development' ? 'development' : 'production');
   const appMockedClient = env.APP_MOCKED_CLIENT || '';
-  const defaultAppTitle = `Telegram${appEnv !== 'production' ? ' Beta' : ''}`;
-  const baseUrl = env.BASE_URL || PRODUCTION_URL;
+  const brand = env.APP_BRAND || 'Baigram';
+  const defaultAppTitle = `${brand}${appEnv !== 'production' ? ' Beta' : ''}`;
+  const baseUrl = env.BASE_URL || '';
   const appTitle = env.APP_TITLE || defaultAppTitle;
   const isProductionApp = appEnv === 'production';
   const appleIcon = isProductionApp ? 'apple-touch-icon' : 'apple-touch-icon-dev';
@@ -174,6 +174,7 @@ export default defineConfig(({ mode }): UserConfig => {
   setViteEnv({
     TG_APP_ENV: appEnv,
     TG_APP_MOCKED_CLIENT: appMockedClient,
+    TG_APP_BRAND: brand,
     TG_APP_NAME: env.APP_NAME || '',
     TG_APP_TITLE: appTitle,
     TG_PUBLIC_URL: baseUrl,
